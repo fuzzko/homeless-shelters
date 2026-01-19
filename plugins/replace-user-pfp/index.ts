@@ -1,34 +1,38 @@
-/// <reference path="../../node_modules/@uwu/shelter-defs/dist/shelter-defs/rootdefs.d.ts" />
-
 import { Settings } from "./types";
 
 const {
-  observeDom
+  plugin,
 } = shelter;
 
-let settings: Settings = {
-  replaceUrl: null,
-  users: [],
-};
-let unobserves = [];
+const { scoped } = plugin;
+
+const store = plugin.store as Settings;
 
 export function onLoad(): void {
-  for (const user of settings.users) {
-    const unobserveNormalAvatar = observeDom(`div[role=img] img[src^="https://cdn.discordapp.com/avatars/${user}"]`, elem => {
-      if (settings.replaceUrl != null) {
-        elem.setAttribute("src", settings.replaceUrl);
-      } else {
-        elem.remove();
-      }
-    });
-    const unobserveVcAvatar = observeDom(`div[class*=avatarSmall style*="/${user}/"]`, elem => {
-      elem.style = `
-        width: 24px;
-        height: 24px;
-      `;
-    });
-    
-    unobserves.push(unobserveNormalAvatar.now);
-    unobserves.push(unobserveVcAvatar.now);
+  store.users ??= [];
+  
+  for (const user of store.users) {
+    scoped.observeDom(
+      `div[role=img] img[src^="https://cdn.discordapp.com/avatars/${user}/"]`,
+      (elem) => {
+        if (store.replaceUrl) {
+          elem.setAttribute("src", store.replaceUrl);
+        } else {
+          elem.remove();
+        }
+      },
+    );
+
+    scoped.observeDom(
+      `div[class*=avatarSmall style*="https://cdn.discordapp.com/avatars/${user}/"]`,
+      (elem) => {
+        elem.style = !store.replaceUrl ? "" : `
+          background-image: url("${store.replaceUrl}");
+          background-size: cover;
+        `;
+      },
+    );
   }
 }
+
+export * from "./settings";

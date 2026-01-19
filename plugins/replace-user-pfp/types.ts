@@ -1,6 +1,4 @@
-export type Settings = {
-  replaceUrl?: string,
-  
-  
+export interface Settings {
+  replaceUrl?: string;
   users: number[];
-};
+}

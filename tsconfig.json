@@ -1,2 +1,14 @@
 {
+  "include": [
+    "plugins/**/*.ts",
+    "plugins/**/*.tsx",
+    "node_modules/@uwu/shelter-defs/**/*.d.ts"
+  ],
+  "compilerOptions": {
+    "lib": ["esnext", "dom"],
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+  }
 }

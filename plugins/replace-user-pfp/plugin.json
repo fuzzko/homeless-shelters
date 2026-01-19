@@ -1,5 +1,5 @@
 {
-  "name": "replace-user-pfp",
+  "name": "Replace users profile picture",
   "author": "komo",
   "description": "Hide or replace user(s) profile picture with preferred image"
 }

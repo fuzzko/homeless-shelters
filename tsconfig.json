@@ -2,6 +2,8 @@
   "include": [
     "plugins/**/*.ts",
     "plugins/**/*.tsx",
+    "intra/**/*.ts",
+    "intra/**/*.tsx",
     "node_modules/@uwu/shelter-defs/**/*.d.ts"
   ],
   "compilerOptions": {
@@ -9,6 +11,6 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "module": "preserve",
-    "moduleResolution": "bundler",
+    "moduleResolution": "bundler"
   }
 }

@@ -9,6 +9,7 @@ const { scoped } = plugin;
 const store = plugin.store as Settings;
 
 export function onLoad(): void {
+  store.replaceUrl ??= `https://cdn.discordapp.com/embed/avatars/${1337 % 5}.png`;
   store.users ??= [];
   
   for (const user of store.users) {

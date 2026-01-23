@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies and Build plugins
         shell: nix develop .#default --command bash {0}
         run: |
-          bun install --frozen-lock
+          bun install --frozen-lockfile
           bun lune ci
 
       - name: Copy additional files

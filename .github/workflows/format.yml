@@ -20,7 +20,7 @@ jobs:
       - name: Write formatter to files
         shell: nix develop .#default --command bash {0}
         run: |
-          bun install --frozen-lock
+          bun install --frozen-lockfile
           bun fmt
 
       - name: Commit changes

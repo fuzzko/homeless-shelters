@@ -1,32 +1,33 @@
+import * as charity from "../../charity";
 import type { Settings } from "./types";
 
-const { plugin } = shelter;
+const {
+  plugin,
+  util: { log },
+} = shelter;
 
 const store = plugin.store as Settings;
 
 const scope = shelter.util.createScopedApi();
 
 export function reobserveUsers() {
+  charity.log("reobserving user avatars");
   scope.disposeAllNow();
 
   for (const user of store.users) {
+    charity.log(`registering user: ${user}`);
+
     scope.observeDom(
       `img[src^="https://cdn.discordapp.com/avatars/${user}/"]`,
       (elem: HTMLElement) => {
-        if (store.replaceUrl) {
-          elem.setAttribute("src", store.replaceUrl);
-        } else {
-          elem.remove();
-        }
+        elem.setAttribute("src", store.replaceUrl);
       },
     );
 
     scope.observeDom(
       `div[class] > div[style*="https://cdn.discordapp.com/avatars/${user}/"]`,
       (elem: HTMLElement) => {
-        elem.style = !store.replaceUrl
-          ? ""
-          : `
+        elem.style = `
           background-image: url("${store.replaceUrl}");
           background-size: cover;
         `;

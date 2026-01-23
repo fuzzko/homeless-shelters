@@ -8,6 +8,7 @@
       inherit inputs;
       devShell.packages = pkgs: with pkgs; [
         bun
+        biome
       ];
     };
 }

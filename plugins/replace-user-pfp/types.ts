@@ -1,4 +1,4 @@
 export interface Settings {
-  replaceUrl?: string;
+  replaceUrl: string;
   users: string[];
 }

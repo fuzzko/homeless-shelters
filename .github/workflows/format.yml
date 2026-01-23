@@ -1,0 +1,36 @@
+name: Formatter write
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Lix
+        uses: canidae-solutions/lix-quick-install-action@v4
+
+      - name: Write formatter to files
+        shell: nix develop .#default --command bash {0}
+        run: |
+          bun fmt
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "style(biome): formatter write"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+

@@ -1,21 +1,18 @@
-import { Settings } from "./types";
+import type { Settings } from "./types";
 
-const {
-  plugin,
-} = shelter;
-
-const { scoped } = plugin;
+const { plugin } = shelter;
 
 const store = plugin.store as Settings;
 
-export function onLoad(): void {
-  store.replaceUrl ??= `https://cdn.discordapp.com/embed/avatars/${1337 % 5}.png`;
-  store.users ??= [];
-  
+const scope = shelter.util.createScopedApi();
+
+export function reobserveUsers() {
+  scope.disposeAllNow();
+
   for (const user of store.users) {
-    scoped.observeDom(
-      `div[role=img] img[src^="https://cdn.discordapp.com/avatars/${user}/"]`,
-      (elem) => {
+    scope.observeDom(
+      `img[src^="https://cdn.discordapp.com/avatars/${user}/"]`,
+      (elem: HTMLElement) => {
         if (store.replaceUrl) {
           elem.setAttribute("src", store.replaceUrl);
         } else {
@@ -24,16 +21,29 @@ export function onLoad(): void {
       },
     );
 
-    scoped.observeDom(
-      `div[class*=avatarSmall style*="https://cdn.discordapp.com/avatars/${user}/"]`,
-      (elem) => {
-        elem.style = !store.replaceUrl ? "" : `
+    scope.observeDom(
+      `div[class] > div[style*="https://cdn.discordapp.com/avatars/${user}/"]`,
+      (elem: HTMLElement) => {
+        elem.style = !store.replaceUrl
+          ? ""
+          : `
           background-image: url("${store.replaceUrl}");
           background-size: cover;
         `;
       },
     );
   }
+}
+
+export function onLoad(): void {
+  store.replaceUrl ??= `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`;
+  store.users ??= [];
+
+  reobserveUsers();
+}
+
+export function onUnload(): void {
+  scope.disposeAllNow();
 }
 
 export * from "./settings";

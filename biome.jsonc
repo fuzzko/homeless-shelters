@@ -1,0 +1,13 @@
+{
+  "formatter": {
+    "indentStyle": "space"
+  },
+
+  "javascript": {
+    "globals": ["shelter", "window"],
+    "formatter": {
+      "arrowParentheses": "asNeeded",
+      "operatorLinebreak": "before"
+    }
+  }
+}

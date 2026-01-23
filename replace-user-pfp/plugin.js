@@ -27,16 +27,19 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 
 //#endregion
 
-//#region solid-js/web
-var require_web = __commonJS({ "solid-js/web"(exports, module) {
-	module.exports = shelter.solidWeb;
-} });
-
-//#endregion
 //#region charity/index.ts
 function setIndex(array, idx, value) {
 	return array.map((thisValue, thisIdx) => thisIdx === idx ? value : thisValue);
 }
+function log$1(text, func = "log") {
+	shelter.util.log(`[${shelter.plugin.id}] ${text}`, func);
+}
+
+//#endregion
+//#region solid-js/web
+var require_web = __commonJS({ "solid-js/web"(exports, module) {
+	module.exports = shelter.solidWeb;
+} });
 
 //#endregion
 //#region plugins/replace-user-pfp/settings.tsx
@@ -126,18 +129,19 @@ function settings() {
 
 //#endregion
 //#region plugins/replace-user-pfp/index.ts
-const { plugin } = shelter;
+const { plugin, util: { log } } = shelter;
 const store = plugin.store;
 const scope = shelter.util.createScopedApi();
 function reobserveUsers() {
+	log$1("reobserving user avatars");
 	scope.disposeAllNow();
 	for (const user of store.users) {
+		log$1(`registering user: ${user}`);
 		scope.observeDom(`img[src^="https://cdn.discordapp.com/avatars/${user}/"]`, (elem) => {
-			if (store.replaceUrl) elem.setAttribute("src", store.replaceUrl);
-else elem.remove();
+			elem.setAttribute("src", store.replaceUrl);
 		});
 		scope.observeDom(`div[class] > div[style*="https://cdn.discordapp.com/avatars/${user}/"]`, (elem) => {
-			elem.style = !store.replaceUrl ? "" : `
+			elem.style = `
           background-image: url("${store.replaceUrl}");
           background-size: cover;
         `;
